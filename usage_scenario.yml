@@ -1,0 +1,27 @@
+name: Test-Scenario
+author: Your Name
+version: 1
+description: Defined test scenario for used in Green Coding Berlin automated tests.
+
+services:
+  heat-generator:
+    image: pavan176/heat2
+    ports:
+      - 8000:8000
+    setup-commands:
+      - echo "Custom setup commands here, if needed"
+
+flow:
+  - name: Load Test
+    container: heat-generator
+    commands:
+      - type: console
+        command: python3 /heat-generator-repo/translator/tests/load_test_script.py run -n 1000000
+        detach: true
+        note: Running load test script for heat-generator with 1000000 iterations
+  - name: Cleanup
+    container: heat-generator
+    commands:
+      - type: console
+        command: python3 /heat-generator-repo/translator/tests/load_test_script.py cleanup
+        note: Performing cleanup on heat-generator
